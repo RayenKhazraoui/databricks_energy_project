@@ -1,0 +1,75 @@
+
+resources:
+
+  pipelines:
+    silver_to_gold_pipeline:
+      name: "silver_to_gold_pipeline"
+      target: "gold"
+      catalog: "main"
+      pipeline_code: "./src/dlt_silver_to_gold/transformations/my_transformation.py"
+
+      serverless:
+        enabled: true
+
+  jobs:
+    my_job:
+      name: "my_job"
+      max_concurrent_runs: 1
+
+      tasks:
+
+        - task_key: A16_ingestion
+          notebook_task:
+            notebook_path: "./src/Ingestion A16"
+          job_cluster_key: serverless_cluster
+
+        - task_key: A16_bronze_to_silver
+          depends_on:
+            - task_key: A16_ingestion
+          notebook_task:
+            notebook_path: "./src/Bronze_to_Silver_A16"
+          job_cluster_key: serverless_cluster
+
+        - task_key: A75_ingestion
+          notebook_task:
+            notebook_path: "./src/ingestion A75"
+          job_cluster_key: serverless_cluster
+
+        - task_key: A75_bronze_to_silver
+          depends_on:
+            - task_key: A75_ingestion
+          notebook_task:
+            notebook_path: "./src/Bronze_to_silver_A75"
+          job_cluster_key: serverless_cluster
+
+        - task_key: weather_ingestion
+          notebook_task:
+            notebook_path: "./src/Weather_data_ingestion"
+          job_cluster_key: serverless_cluster
+
+        - task_key: weather_silver
+          depends_on:
+            - task_key: weather_ingestion
+          notebook_task:
+            notebook_path: "./src/weather_bronze_to_silver"
+          job_cluster_key: serverless_cluster
+
+        - task_key: silver_to_gold
+          depends_on:
+            - task_key: A16_bronze_to_silver
+            - task_key: A75_bronze_to_silver
+            - task_key: weather_silver
+          pipeline_task:
+            pipeline_id: "{{resources.pipelines.silver_to_gold_pipeline.id}}"
+          job_cluster_key: serverless_cluster
+
+      job_clusters:
+        - job_cluster_key: serverless_cluster
+          new_cluster:
+            spark_version: "latest-runtime"
+            serverless: true
+            num_workers: 1
+            data_security_mode: SINGLE_USER
+            custom_tags:
+              job: "my_job"
+

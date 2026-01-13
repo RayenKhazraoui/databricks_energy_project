@@ -1,0 +1,27 @@
+bundle:
+  name: "bundle"
+
+include:
+  - resources/*.yml
+  - resources/*/*.yml
+
+variables:
+  base_notebook_dir:
+    description: "Relative path for all notebook/scripts"
+    default: "./src"
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://adb-7405617936505874.14.azuredatabricks.net
+
+  prod:
+    mode: production
+    workspace:
+      host: https://adb-7405617936505874.14.azuredatabricks.net
+      root_path: /Users/rayen@willeminebeuvinghotmail.onmicrosoft.com/.bundle/${bundle.name}/${bundle.target}
+    run_as:
+      user_name: rayen@willeminebeuvinghotmail.onmicrosoft.com
+
