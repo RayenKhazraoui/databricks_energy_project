@@ -1,8 +1,8 @@
-#Project Description
+#  Project description
 In this project azure databricks and Azure Data Factory are used to collect and process raw electricity and weather data in the Netherlands via a medaillon architecture. The project project is based on batch-wise processing leveraging databrick's incremental data processing capabilities.
 
 
-# Data Sources and Ingestion Architecture
+## Data Sources and Ingestion Architecture
 
 ## Energy Data (ENTSO‑E Transparency Platform API)
 
