@@ -1,6 +1,5 @@
 #  Project description
-In this project azure databricks and Azure Data Factory are used to collect and process raw electricity and weather data in the Netherlands via a medaillon architecture. The project project is based on batch-wise processing leveraging databrick's incremental data processing capabilities.
-
+This project leverages Azure Databricks and Azure Data Factory to collect, process, and refine raw electricity and weather data for the Netherlands. Using a medallion architecture (bronze, silver, gold), the system organizes and transforms incoming data into clean, analytics ready datasets suitable for downstream consumption. The pipeline operates in batch mode while taking advantage of Databricks’ incremental processing capabilities to efficiently handle new data as it arrives.
 
 ## Data Sources and Ingestion Architecture
 
